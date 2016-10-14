@@ -1,0 +1,29 @@
+USE [PUBS]
+GO
+/****** Object:  View [dbo].[AuthorRoyalty]
+*******Script Date: 01/20/2008 13:39:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE VIEW [dbo].[AuthorRoyalty]
+AS
+SELECT stores.stor_name
+     , stores.state
+     , sales.ord_date
+     , sales.qty
+     , titles.title
+     , titles.type
+     , titles.price
+     , titles.royalty
+     , authors.au_lname
+     , authors.au_fname
+     , sales.qty * titles.price AS Amount
+     , sales.qty * titles.price * titles.royalty / 100 AS AuthorRoyalty
+  FROM dbo.sales INNER JOIN
+       dbo.stores ON sales.stor_id = stores.stor_id INNER JOIN
+       dbo.titles ON sales.title_id = titles.title_id INNER JOIN
+       dbo.titleauthor ON titles.title_id = titleauthor.title_id INNER JOIN
+       dbo.authors ON authors.au_id = titleauthor.au_id
+
+GO
